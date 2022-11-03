@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="estate_property_view_search" model="ir.ui.view">
+        <field name="name">estate.property.search</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search string="搜索房产">
+                <field name="name" string="房产名称"/>
+                <field name="type_id"/>
+                <field name="tag_ids"/>
+                <field name="postcode"/>
+                <field name="expected_price"/>
+                <field name="bedrooms"/>
+                <filter string="有效" name="filter_available" domain="[('state','in',['new','receive','accept'])]" help="展示可销售的房产"/>
+                <filter string="包含归档" name="archived" domain="['|', ('active', '=', True), ('active', '=', False)]"/>
+                <separator/>
+                <filter string="已归档" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="1" string="group_by_postcode">
+                    <filter string="邮编" name="postcode" context="{'group_by':'postcode', 'residual_visible':True}"/>
+                </group>
+                <group expand="1" string="group_by_type">
+                    <filter string="类型" name="group_by_type" context="{'group_by':'type_id', 'residual_visible':True}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- 列表视图 -->
+    <record id="view_estate_property_list" model="ir.ui.view">
+        <field name="name">estate.property.list</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state in ['receive','accept']"
+                decoration-it="state == 'accept'" decoration-muted="state == 'sold'">
+                <field name="name"/>
+                <field name="type_id"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="postcode"/>
+                <field name="bedrooms"/>
+                <field name="living_area"/>
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="date_availability" optional="hide"/>
+                <field name="state" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 表单视图 -->
+    <record id="view_estate_property_form" model="ir.ui.view">
+        <field name="name">estate.property.form</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                <header>
+                    <button name="action_cancel" type="object" string="废弃" states="new,receive,accept"/>
+                    <button name="action_sold" type="object" string="销售" states="accept"/>
+                    <button name="%(demo.estate_property_change_action)d" string="变更" data-hotkey="c" title="变更经纪人"
+                            type="action" context="{'default_property_id': active_id}" />
+                    <button type="action" name="%(demo.estate_property_tag_list_action)d" string="标签列表"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}" statusbar_visible="new,receive,accept,sold,canceled"/>
+                </header>
+                <sheet>
+                    <!-- <div class="oe_button_box" name="button_box">
+                        <button name="action_property_list" type="object" class="oe_stat_button" icon="fa-star">
+                            <div class="o_stat_info">
+                                <field name="bedrooms" class="o_stat_value"/>
+                                <span class="o_stat_text">测试</span>
+                            </div>
+                        </button>
+                    </div> -->
+                    <widget name="web_ribbon" title="已归档" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <div>
+                            <label for="name"/>
+                        </div>
+                        <h1 class="mb0">
+                            <field name="name" placeholder="输入名称" class="mb0"/>
+                        </h1>
+                        <div class="row mb16">
+                            <label for="tag_ids" class="col-lg-3 o_light_label"/>
+                            <!-- 标签颜色 -->
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </div>
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type_id" options="{'no_create': True, 'no_edit': True}"/>
+                            <field name="postcode"/>
+                            <field name="date_availability"/>
+                        </group>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="expected_price"/>
+                            <field name="best_price"/>
+                            <field name="selling_price"/>
+                        </group>
+                        <notebook>
+                            <page string="简介">
+                                <group>
+                                    <group>
+                                        <field name="description"/>
+                                        <field name="bedrooms"/>
+                                        <field name="living_area"/>
+                                        <field name="facades"/>
+                                        <field name="garage"/>
+                                        <field name="garden"/>
+                                        <field name="garden_area" attrs="{'invisible': [('garden', '=', False)]}"/>
+                                        <field name="garden_orientation" attrs="{'invisible': [('garden', '=', False)]}"/>
+                                        <field name="total_area"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="报价">
+                                <field name="offer_ids" nolabel="1" attrs="{'readonly': [('state', 'in', ['sold','canceled'])]}">
+                                    <tree string="offers" editable="bottom" decoration-success="status == 'accepted'" decoration-danger="status == 'refused'">
+                                        <field name="price"/>
+                                        <field name="partner_id"/>
+                                        <button string="接受" name="action_accept" attrs="{'invisible': [('status', '!=', False)]}" type="object" icon="fa-check"/>
+                                        <button string="拒绝" name="action_refuse" attrs="{'invisible': [('status', '!=', False)]}" type="object" icon="fa-times"/>
+                                        <field name="status" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="其他">
+                                <group>
+                                    <group>
+                                        <field name="salesman_id"/>
+                                        <field name="buyer_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- 看板视图 -->
+    <record id="view_estate_property_kanban" model="ir.ui.view">
+        <field name="name">estate.property.kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="type_id">
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong><field name="name"/></strong>
+                                <span t-if="record.state.raw_value == 'new'">
+                                    新
+                                </span>
+                                <div class="mt4">
+                                    <strong>期望价格:</strong> <field name="expected_price"/>
+                                </div>
+                                <div class="mt4" t-if="record.best_price.raw_value">
+                                    <strong>最高报价:</strong> <field name="best_price"/>
+                                </div>
+                                <div class="mt4" t-if="record.state.raw_value == 'sold'">
+                                    <strong>销售价格:</strong> <field name="selling_price"/>
+                                </div>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- 示例/广告/房产 菜单动作 -->
+    <record id="estate_property_list_action" model="ir.actions.act_window">
+        <field name="name">房产</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{
+                'search_default_group_by_type': 1,
+                'search_default_filter_available': 1,
+            }</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            创建房屋
+          </p><p>
+            功能说明
+          </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- 可通过地址访问：http://localhost:8069/report/html/demo.report_property_offers/2 -->
+        <record id="action_report_estate_property" model="ir.actions.report">
+            <field name="name">房产报价表</field>
+            <field name="model">estate.property</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">demo.report_property_offers</field>
+            <field name="report_file">demo.report_property_offers</field>
+            <field name="print_report_name">'房产报价表'</field>
+            <field name="binding_model_id" ref="model_estate_property"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="action_report_estate_salesman" model="ir.actions.report">
+            <field name="name">房产报价表</field>
+            <field name="model">res.users</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">demo.report_salesman_properties</field>
+            <field name="report_file">demo.report_salesman_properties</field>
+            <field name="print_report_name">'我的房产报价表'</field>
+            <field name="binding_model_id" ref="base.model_res_users"/>
+        </record>
+    </data>
+</odoo>

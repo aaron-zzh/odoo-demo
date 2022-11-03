@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="view_change_salesman_wizard_form" model="ir.ui.view">
+            <field name="name">estate.property.change.form</field>
+            <field name="model">estate.property.change</field>
+            <field name="arch" type="xml">
+                <form string="变更经纪人">
+                    <group>
+                        <field name="salesman_id" options="{'no_create_edit': True}" />
+                    </group>
+                    <field name="reason" placeholder="请填写变更原因"/>
+                    <footer>
+                        <button name="action_change" string="确定" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="取消" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="estate_property_change_action" model="ir.actions.act_window">
+            <field name="name">变更经纪人</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">estate.property.change</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_change_salesman_wizard_form"/>
+            <field name="target">new</field>
+            <field name="context">{
+                'dialog_size' : 'medium',
+            }</field>
+        </record>
+</odoo>

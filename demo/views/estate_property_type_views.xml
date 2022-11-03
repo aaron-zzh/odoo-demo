@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- 列表视图 -->
+    <record id="view_estate_property_type_list" model="ir.ui.view">
+        <field name="name">estate.property.type.list</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <!-- 通过字段手动设置排序 -->
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 表单视图 -->
+    <record id="view_estate_property_type_form" model="ir.ui.view">
+        <field name="name">estate.property.type.form</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_offer_list" type="object" class="oe_stat_button" icon="fa-bars">
+                            <div class="o_stat_info">
+                                <field name="offer_count" class="o_stat_value"/>
+                                <span class="o_stat_text">报价单</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1 class="mb0">
+                            <field name="name" placeholder="输入名称" class="mb0"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="property_count"/>
+                    </group>
+                    <notebook>
+                        <page string="房产">
+                            <field name="property_ids">
+                                <tree string="properties">
+                                    <field name="name"/>
+                                    <field name="expected_price"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 示例/广告/房产类型 菜单动作 -->
+    <record id="estate_property_type_list_action" model="ir.actions.act_window">
+        <field name="name">房产类型</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            创建房产类型
+          </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="change_salesman_action" model="ir.actions.server">
+        <field name="name">变更经纪人</field>
+        <field name="model_id" ref="model_estate_property"/>
+        <field name="binding_model_id" ref="demo.model_estate_property"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+if record:
+    action_values = env.ref('demo.estate_property_change_action').sudo().read()[0]
+    action_values.update({'context': env.context})
+    action = action_values
+        </field>
+    </record>
+    <menuitem id="menu_estate_property_root" name="示例" sequence="9" web_icon="demo,static/description/icon.png">
+        <menuitem id="menu_estate_property_ads" name="广告">
+            <menuitem id="menu_estate_property_list" action="estate_property_list_action"/>
+        </menuitem>
+        <menuitem id="menu_estate_property_settings" name="设置">
+            <menuitem id="menu_estate_property_type_list" action="estate_property_type_list_action"/>
+            <menuitem id="menu_estate_property_tag_list" action="estate_property_tag_list_action"/>
+        </menuitem>
+    </menuitem>
+</odoo>

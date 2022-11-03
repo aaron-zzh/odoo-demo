@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.module_category_xueji_demo" model="ir.module.category">
+        <field name="description">Odoo 房产示例应用.</field>
+        <field name="sequence">19</field>
+    </record>
+
+    <record id="group_estate_property_user" model="res.groups">
+        <field name="name">经纪人</field>
+        <field name="category_id" ref="base.module_category_xueji_demo"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('base.group_private_addresses'), ref('base.group_user')])]"/>
+        <field name="comment">房产经纪人</field>
+    </record>
+    <record id="group_estate_property_manager" model="res.groups">
+        <field name="name">房产经理</field>
+        <field name="category_id" ref="base.module_category_xueji_demo"/>
+        <field name="implied_ids" eval="[(4,ref('demo.group_estate_property_user'))]"/>
+        <field name="comment">房产经理</field>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+<data noupdate="1">
+    <!-- <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('demo.group_estate_property_user'))]"/>
+    </record> -->
+    <record id="demo_estate_property_agent_rule" model="ir.rule">
+        <field name="name">代理人仅查看未分配或自己负责的房产</field>
+        <field name="model_id" ref="demo.model_estate_property"/>
+        <!-- <field name="perm_read" eval="False"/> -->
+        <field name="groups" eval="[Command.link(ref('demo.group_estate_property_user'))]"/>
+        <field name="domain_force">['|',('salesman_id','=',False),('salesman_id', '=', user.id)]</field>
+    </record>
+
+    <record id="demo_estate_property_manager_rule" model="ir.rule">
+        <field name="name">经理可以查看所有</field>
+        <field name="model_id" ref="demo.model_estate_property"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('demo.group_estate_property_manager'))]"/>
+    </record>
+
+    <!-- 可共享的跨公司数据记录规则 -->
+    <record id="estate_property_shared_company_rule" model="ir.rule">
+        <field name="name">查看自己公司或未关联公司的房产</field>
+        <field name="model_id" ref="model_estate_property"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">
+            ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+        </field>
+    </record>
+</data>
+</odoo>

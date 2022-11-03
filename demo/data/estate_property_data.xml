@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property Types -->
+    <record id="property_residential" model="estate.property.type">
+        <field name="name">住宅</field>
+    </record>
+
+    <record id="property_commercial" model="estate.property.type">
+        <field name="name">商住</field>
+    </record>
+
+    <record id="property_industrial" model="estate.property.type">
+        <field name="name">工业</field>
+    </record>
+
+    <record id="property_land" model="estate.property.type">
+        <field name="name">农村</field>
+    </record>
+</odoo>
