@@ -24,7 +24,7 @@ class EstateProperty(models.Model):
 
     description = fields.Text('描述')
     postcode = fields.Char('邮编')
-    date_availability = fields.Date('有效期', copy=False, default=lambda self: self._default_date_availability)
+    date_availability = fields.Date('有效期', copy=False, default=lambda self: self._default_date_availability())
     expected_price = fields.Float('期望价格', required=True)
     selling_price = fields.Float('销售价格', readonly=True, copy=False)
     bedrooms = fields.Integer('卧室数量')

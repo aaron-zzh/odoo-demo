@@ -80,11 +80,11 @@ class EstatePropertyOffer(models.Model):
     @api.model
     def create(self, vals):
         # Do some business logic, modify vals...
-        property = self.env['estate.property'].browse(vals['property_id'])
+        if vals.get('property_id'):
+            property = self.env['estate.property'].browse(vals['property_id'])
 
-        if property.best_price and vals['price'] < property.best_price:
-            raise ValidationError('报价不能低于%0.2f' % property.best_price)
+            if property and property.best_price and vals['price'] < property.best_price:
+                raise ValidationError('报价不能低于%0.2f' % property.best_price)
 
-        property.state = 'accept'
         # Then call super to execute the parent method，在 python3 中等同 super(TestModel, self).
         return super().create(vals)

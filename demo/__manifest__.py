@@ -11,8 +11,8 @@
     'depends': ['base', 'mail'],
     # 主数据-安装或升级时加载
     'data': [
-        'security/ir.model.access.csv',
         'security/demo_security.xml',
+        'security/ir.model.access.csv',
 
         'data/estate_property_data.xml',
 

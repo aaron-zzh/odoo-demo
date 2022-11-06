@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo noupdate="1">
-    <record id="estate_property_type_1" model="estate.property">
+    <record id="estate_property_type_1" model="estate.property.type">
         <field name="name">类型1</field>
     </record>
     <record id="estate_property_1" model="estate.property">
         <field name="name">Big Villa</field>
-        <field name="date_availability" eval="datetime.now().year+1"/>
+        <field name="date_availability" eval="(datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d')"/>
         <field name="state">new</field>
         <field name="postcode">12345</field>
         <field name="expected_price">120000</field>
@@ -24,9 +24,15 @@
             ('user_type_id', '=', ref('account.data_account_type_direct_costs')),
             ('company_id', '=', obj().env.company.id)]"/> -->
     </record>
+
+    <record id="estate_property_offer_3" model="estate.property.offer">
+        <field name="price">140000</field>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+
     <record id="estate_property_3" model="estate.property">
         <field name="name">房产1</field>
-        <field name="date_availability" eval="datetime.now().year+1"/>
+        <field name="date_availability" eval="(datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d')"/>
         <field name="state">new</field>
         <field name="postcode">12345</field>
         <field name="expected_price">120000</field>
@@ -52,10 +58,6 @@
     <record id="estate_property_offer_2" model="estate.property.offer">
         <field name="property_id" ref="estate_property_1"/>
         <field name="price">130000</field>
-        <field name="partner_id" ref="base.res_partner_2"/>
-    </record>
-    <record id="estate_property_offer_3" model="estate.property.offer">
-        <field name="price">140000</field>
         <field name="partner_id" ref="base.res_partner_2"/>
     </record>
 
